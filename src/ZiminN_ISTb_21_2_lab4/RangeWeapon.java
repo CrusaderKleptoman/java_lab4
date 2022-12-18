@@ -61,7 +61,7 @@ public class RangeWeapon extends BaseWeapon{
                 return 0;
             }
         }
-
+        ammunition--;
         int rollDice = RollDice(Dice.D20) + this.getWeaponSharpening();
         if (meleeShot)
         {
@@ -83,7 +83,6 @@ public class RangeWeapon extends BaseWeapon{
         }
 
         System.out.printf("Нанесено урона %d\n", rollDice);
-        ammunition--;
         return rollDice;
     }
 }
