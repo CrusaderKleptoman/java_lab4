@@ -21,11 +21,10 @@ public class MeleeWeapon extends BaseWeapon{
 
     @Override
     public int Attack(int enemyArmour, int distance) {
-        Scanner scanner = new Scanner(System.in);
 
         if (distance > this.getAttackRange())
         {
-            System.out.println("Враг слишком далеко для удара, завершение атаки");
+            System.out.println("Враг слишком далеко для удара, невозможно совершение атаки");
             return 0;
         }
 
