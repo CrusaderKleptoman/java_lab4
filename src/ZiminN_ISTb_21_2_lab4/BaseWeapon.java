@@ -3,20 +3,15 @@ package ZiminN_ISTb_21_2_lab4;
 import java.util.Random;
 
 abstract public class BaseWeapon {
-    private Random random = new Random();
+    private Random random;
     private String weaponName;
     private Dice damageDice;
     private int damageDiceAmount;
     private int weaponSharpening;
     private int attackRange;
 
-    public BaseWeapon()
-    {
-        weaponName = "Кулак";
-        damageDice = Dice.D4;
-        damageDiceAmount = 1;
-        weaponSharpening = 0;
-        attackRange = 5;
+    public BaseWeapon() {
+        random = new Random();
     }
 
     public BaseWeapon(String weaponName, Dice damageDice, int damageDiceAmount, int weaponSharpening, int attackRange)
@@ -26,6 +21,8 @@ abstract public class BaseWeapon {
         this.damageDiceAmount = damageDiceAmount;
         this.weaponSharpening = weaponSharpening;
         this.attackRange = attackRange;
+        random = new Random();
+
     }
 
     public BaseWeapon(BaseWeapon weapon)
@@ -35,6 +32,8 @@ abstract public class BaseWeapon {
         this.damageDiceAmount = weapon.damageDiceAmount;
         this.weaponSharpening = weapon.weaponSharpening;
         this.attackRange = weapon.attackRange;
+        random = new Random();
+
     }
 
     public String getWeaponName() {return weaponName;}

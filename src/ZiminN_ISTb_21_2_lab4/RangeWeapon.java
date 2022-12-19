@@ -8,6 +8,9 @@ public class RangeWeapon extends BaseWeapon{
     {
         super();
         this.setWeaponName("Камень");
+        this.setDamageDice(Dice.D4);
+        this.setDamageDiceAmount(1);
+        this.setWeaponSharpening(0);
         this.setAttackRange(20);
         this.ammunition = 20;
     }
@@ -62,13 +65,14 @@ public class RangeWeapon extends BaseWeapon{
             }
         }
         ammunition--;
-        int rollDice = RollDice(Dice.D20) + this.getWeaponSharpening();
+        int rollDiceDamage = this.getWeaponSharpening();
+        int rollDiceHit = RollDice(Dice.D20) + this.getWeaponSharpening();
         if (meleeShot)
         {
-            rollDice -= 2;
+            rollDiceHit -= 2;
         }
-        System.out.printf("Бросок на попадание %d\n", rollDice);
-        if (rollDice < enemyArmour)
+        System.out.printf("Бросок на попадание %d\n", rollDiceHit);
+        if (rollDiceHit < enemyArmour)
         {
             System.out.println("Броня не пробита");
             return 0;
@@ -76,13 +80,12 @@ public class RangeWeapon extends BaseWeapon{
         else
         {
             System.out.println("Броня пробита");
-            rollDice = this.getWeaponSharpening();
             for (int i = 0; i < this.getDamageDiceAmount(); i++) {
-                rollDice += RollDice(this.getDamageDice());
+                rollDiceDamage += RollDice(this.getDamageDice());
             }
         }
 
-        System.out.printf("Нанесено урона %d\n", rollDice);
-        return rollDice;
+        System.out.printf("Нанесено урона %d\n", rollDiceDamage);
+        return rollDiceDamage;
     }
 }
