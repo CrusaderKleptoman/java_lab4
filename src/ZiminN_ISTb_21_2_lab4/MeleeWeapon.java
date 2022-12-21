@@ -7,6 +7,10 @@ public class MeleeWeapon extends BaseWeapon{
     {
         super();
         this.setWeaponName("Ножка от стула");
+        this.setDamageDice(Dice.D4);
+        this.setDamageDiceAmount(1);
+        this.setWeaponSharpening(0);
+        this.setAttackRange(5);
     }
 
     public MeleeWeapon(String weaponName, Dice damageDice, int damageDiceAmount, int accuracy, int attackRange)
@@ -28,9 +32,10 @@ public class MeleeWeapon extends BaseWeapon{
             return 0;
         }
 
-        int rollDice = RollDice(Dice.D20) + this.getWeaponSharpening();
-        System.out.printf("Бросок на попадание %d\n", rollDice);
-        if (rollDice < enemyArmour)
+        int rollDiceDamage = this.getWeaponSharpening();;
+        int rollDiceHit = RollDice(Dice.D20) + this.getWeaponSharpening();
+        System.out.printf("Бросок на попадание %d\n", rollDiceHit);
+        if (rollDiceHit < enemyArmour)
         {
             System.out.println("Броня не пробита");
             return 0;
@@ -38,13 +43,12 @@ public class MeleeWeapon extends BaseWeapon{
         else
         {
             System.out.println("Броня пробита");
-            rollDice = this.getWeaponSharpening();
             for (int i = 0; i < this.getDamageDiceAmount(); i++) {
-                rollDice += RollDice(this.getDamageDice());
+                rollDiceDamage += RollDice(this.getDamageDice());
             }
         }
 
-        System.out.printf("Нанесено урона %d\n", rollDice);
-        return rollDice;
+        System.out.printf("Нанесено урона %d\n", rollDiceDamage);
+        return rollDiceDamage;
     }
 }

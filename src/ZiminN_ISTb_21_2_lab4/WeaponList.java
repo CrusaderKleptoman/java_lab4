@@ -16,7 +16,7 @@ public class WeaponList {
         meleeWeaponList.remove(meleeWeapon);
     }
     public void removeRangeWeapon(RangeWeapon rangeWeapon) {
-        meleeWeaponList.remove(rangeWeapon);
+        rangeWeaponList.remove(rangeWeapon);
     }
 
     public void writeMeleeWeaponList()
