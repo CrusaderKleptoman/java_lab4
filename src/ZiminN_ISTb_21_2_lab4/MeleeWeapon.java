@@ -1,7 +1,5 @@
 package ZiminN_ISTb_21_2_lab4;
 
-import java.util.Scanner;
-
 public class MeleeWeapon extends BaseWeapon{
     public MeleeWeapon()
     {

@@ -3,36 +3,47 @@ package ZiminN_ISTb_21_2_lab4;
 import java.util.ArrayList;
 
 public class WeaponList {
-    private ArrayList<MeleeWeapon> meleeWeaponList = new ArrayList<>();
-    private ArrayList<RangeWeapon> rangeWeaponList = new ArrayList<>();
+    private ArrayList<BaseWeapon> weaponList = new ArrayList<>();
 
-    public void addMeleeWeapon(MeleeWeapon meleeWeapon) {
-        meleeWeaponList.add(meleeWeapon);
+    public void addWeapon(BaseWeapon weapon) {
+        weaponList.add(weapon);
+        System.out.println("Оружие добавлено в арсенал");
     }
-    public void addRangeWeapon(RangeWeapon rangeWeapon) {
-        rangeWeaponList.add(rangeWeapon);
-    }
-    public void removeMeleeWeapon(MeleeWeapon meleeWeapon) {
-        meleeWeaponList.remove(meleeWeapon);
-    }
-    public void removeRangeWeapon(RangeWeapon rangeWeapon) {
-        rangeWeaponList.remove(rangeWeapon);
+    public void removeWeapon(BaseWeapon weapon) {
+        weaponList.remove(weapon);
+        System.out.println("Оружие убрано из арсенала");
     }
 
-    public void writeMeleeWeaponList()
+    public void removeWeaponWithID(int weaponID) {
+        weaponList.remove(weaponList.get(weaponID - 1));
+        System.out.println("Оружие убрано из арсенала");
+    }
+    public void writeWeapon(int weaponID)
     {
-        for (MeleeWeapon weapon: meleeWeaponList)
+        var weapon = weaponList.get(weaponID - 1);
+        if(weapon.getClass() == MeleeWeapon.class)
         {
             System.out.printf("Название оружия %s, урон оружия %d%s, модификатор попадания и урона %d, дистанция удара %d \n", weapon.getWeaponName(), weapon.getDamageDiceAmount(), weapon.getDamageDice().toString(), weapon.getWeaponSharpening(), weapon.getAttackRange());
         }
+        if (weapon.getClass() == RangeWeapon.class)
+        {
+            System.out.printf("Название оружия %s, урон оружия %d%s, модификатор попадания и урона %d, дистанция выстрела %d, запас аммуниции %d \n", weapon.getWeaponName(), weapon.getDamageDiceAmount(), weapon.getDamageDice().toString(), weapon.getWeaponSharpening(), weapon.getAttackRange(), ((RangeWeapon) weapon).getAmmunition());
+        }
     }
 
-    public void writeRangeWeaponList()
+    public void writeWeaponList()
     {
-        for (RangeWeapon weapon: rangeWeaponList)
+        int count = 0;
+        for (var weapon: weaponList)
         {
-            System.out.printf("Название оружия %s, урон оружия %d%s, модификатор попадания и урона %d, дистанция выстрела %d, запас боеприпасов %d \n", weapon.getWeaponName(), weapon.getDamageDiceAmount(), weapon.getDamageDice().toString(), weapon.getWeaponSharpening(), weapon.getAttackRange(), weapon.getAmmunition());
+            count++;
+            if (weapon.getClass() == MeleeWeapon.class) {
+                System.out.printf("%d Название оружия %s, урон оружия %d%s, модификатор попадания и урона %d, дистанция удара %d \n", count, weapon.getWeaponName(), weapon.getDamageDiceAmount(), weapon.getDamageDice().toString(), weapon.getWeaponSharpening(), weapon.getAttackRange());
+            }
+            if (weapon.getClass() == RangeWeapon.class)
+            {
+                System.out.printf("%d Название оружия %s, урон оружия %d%s, модификатор попадания и урона %d, дистанция выстрела %d, запас аммуниции %d \n", count, weapon.getWeaponName(), weapon.getDamageDiceAmount(), weapon.getDamageDice().toString(), weapon.getWeaponSharpening(), weapon.getAttackRange(), ((RangeWeapon) weapon).getAmmunition());
+            }
         }
-        
     }
 }
