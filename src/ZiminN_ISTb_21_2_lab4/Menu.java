@@ -25,8 +25,8 @@ public class Menu {
         do {
             System.out.println("_______________________________________________________________");
             System.out.println("Главное меню");
-            System.out.println("1 - работа с арсеналом");
-            System.out.println("2 - работа с оружием");
+            System.out.println("1 - перейти в арсенал");
+            System.out.println("2 - перейти в тренировочный зал");
             System.out.println("0 - закрыть программу");
             command = readCommand();
 
@@ -57,7 +57,7 @@ public class Menu {
         int command = -1;
         do {
             System.out.println("_______________________________________________________________");
-            System.out.println("Главное меню");
+            System.out.println("Арсенал");
             System.out.println("1 - проверить арсенал(считать оружие из файла)");
             System.out.println("2 - добавить оружие в арсенал");
             System.out.println("3 - убрать оружие из арсенала по номеру");
@@ -104,47 +104,53 @@ public class Menu {
                     int range;
                     int ammunition;
                     System.out.println("Выберите тип оружия, введите 1 для ближнего, 2 для дальнего");
-                    weaponType = scanner.nextLine();
-                    while(true) {
-                        if (weaponType.equals("1")) {
-                            System.out.println("Введите название оружие");
-                            name = scanner.nextLine();
-                            System.out.println("Введите номер кости урона");
-                            System.out.println("1 - d2\n2 - d4\n3 - d6\n4 - d8\n5 - d10\n6 - d12");
-                            dice = readCommand();
-                            System.out.println("Введите количество костей урона");
-                            diceAmount = readCommand();
-                            System.out.println("Введите модификатор оружия");
-                            sharp = readCommand();
-                            System.out.println("Введите дистанцию атаки оружия");
-                            range = readCommand();
-                            MeleeWeapon meleeWeapon = new MeleeWeapon(name, diceList[dice - 1], diceAmount, sharp, range);
-                            weaponList.addWeapon(meleeWeapon);
-                            System.out.println("Оружие добавлено в арсенал");
-                            break;
+                    try {
+                        while(true) {
+                            weaponType = scanner.nextLine();
+                            if (weaponType.equals("1")) {
+                                System.out.println("Введите название оружие");
+                                name = scanner.nextLine();
+                                System.out.println("Введите номер кости урона");
+                                System.out.println("1 - d2\n2 - d4\n3 - d6\n4 - d8\n5 - d10\n6 - d12");
+                                dice = readCommand();
+                                System.out.println("Введите количество костей урона");
+                                diceAmount = readCommand();
+                                System.out.println("Введите модификатор оружия");
+                                sharp = readCommand();
+                                System.out.println("Введите дистанцию атаки оружия");
+                                range = readCommand();
+                                MeleeWeapon meleeWeapon = new MeleeWeapon(name, diceList[dice - 1], diceAmount, sharp, range);
+                                weaponList.addWeapon(meleeWeapon);
+                                System.out.println("Оружие добавлено в арсенал");
+                                break;
+                            }
+                            if (weaponType.equals("2")) {
+                                System.out.println("Введите название оружие");
+                                name = scanner.nextLine();
+                                System.out.println("Введите номер кости урона");
+                                System.out.println("1 - d2\n2 - d4\n3 - d6\n4 - d8\n5 - d10\n6 - d12");
+                                dice = readCommand();
+                                System.out.println("Введите количество костей урона");
+                                diceAmount = readCommand();
+                                System.out.println("Введите модификатор оружия");
+                                sharp = readCommand();
+                                System.out.println("Введите дистанцию атаки оружия");
+                                range = readCommand();
+                                System.out.println("Введите запас аммуниции");
+                                ammunition = readCommand();
+                                RangeWeapon rangeWeapon = new RangeWeapon(name, diceList[Math.min(5, dice - 1)], diceAmount, sharp, range, ammunition);
+                                weaponList.addWeapon(rangeWeapon);
+                                System.out.println("Оружие добавлено в арсенал");
+                                break;
+                            }
+                            else {
+                                System.out.println("Неверный класс оружия, повторите ввод");
+                            }
                         }
-                        if (weaponType.equals("2")) {
-                            System.out.println("Введите название оружие");
-                            name = scanner.nextLine();
-                            System.out.println("Введите номер кости урона");
-                            System.out.println("1 - d2\n2 - d4\n3 - d6\n4 - d8\n5 - d10\n6 - d12");
-                            dice = readCommand();
-                            System.out.println("Введите количество костей урона");
-                            diceAmount = readCommand();
-                            System.out.println("Введите модификатор оружия");
-                            sharp = readCommand();
-                            System.out.println("Введите дистанцию атаки оружия");
-                            range = readCommand();
-                            System.out.println("Введите запас аммуниции");
-                            ammunition = readCommand();
-                            RangeWeapon rangeWeapon = new RangeWeapon(name, diceList[dice - 1], diceAmount, sharp, range, ammunition);
-                            weaponList.addWeapon(rangeWeapon);
-                            System.out.println("Оружие добавлено в арсенал");
-                            break;
-                        }
-                        else {
-                            System.out.println("Неверный класс оружия, повторите ввод");
-                        }
+                    }
+                    catch (ArrayIndexOutOfBoundsException arrayIndexOutOfBoundsException)
+                    {
+                        System.out.println("Неверное значение кости урона");
                     }
                     break;
                 case 3:
@@ -201,26 +207,28 @@ public class Menu {
 
     private static void WeaponMenu()
     {
-        int ID = 0;
+        int ID = -1;
         int command = -1;
         do {
             System.out.println("_______________________________________________________________");
-            System.out.println("Главное меню");
+            System.out.println("Тренировочный зал");
             System.out.println("1 - взять по номеру оружие на проверку");
             System.out.println("2 - оценить характеристики оружия");
             System.out.println("3 - проверить оружие на манекене");
-            System.out.println("0 - закрыть программу");
+            System.out.println("0 - вернуться в главное меню");
             command = readCommand();
 
             switch (command) {
                 case 1:
-                    System.out.println("Введите номер оружия");
-                    ID = readCommand() - 1;
-                    weapon = weaponList.getWeapon(ID);
-                    weaponList.writeWeapon(ID);
+                        System.out.println("Введите номер оружия");
+                        ID = readCommand() - 1;
+                        weapon = weaponList.getWeapon(ID);
+                        if(weapon == null) {break;}
+                        weaponList.writeWeapon(ID);
                     break;
                 case 2:
-                    weaponList.writeWeapon(ID);
+                    if (ID == -1) {System.out.println("Оружие ещё не выбрано");}
+                    else {weaponList.writeWeapon(ID);}
                     break;
                 case 3:
                     try {
@@ -231,7 +239,7 @@ public class Menu {
                     }
                     catch (NullPointerException nullPointerException)
                     {
-                        System.out.println("Оружие ещё не взято");
+                        System.out.println("Оружие ещё не выбрано");
                     }
                     break;
                 case 0:
@@ -239,7 +247,6 @@ public class Menu {
                 default:
                     System.out.println("Команды нет в списке, повторите ввод");
             }
-
         } while (command != 0);
     }
 }
