@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Menu {
 
-    private static WeaponList weaponList;
+    private static WeaponList weaponList = new WeaponList();
     private static BaseWeapon weapon;
     private static int readCommand() {
         Scanner scanner = new Scanner(System.in);
@@ -46,9 +46,9 @@ public class Menu {
         } while (command != 0);
     }
 
-    public static void WeaponListMenu()
+    private static void WeaponListMenu()
     {
-        String armory = "armory.txt";
+        String armory = "armory.bin";
         int weaponAmount;
         String weaponType;
         Dice[] diceList = Dice.values();
@@ -63,34 +63,38 @@ public class Menu {
             System.out.println("3 - убрать оружие из арсенала по номеру");
             System.out.println("4 - проверить оружие по номеру");
             System.out.println("5 - закрыть арсенал(с добавлением всего нового оружия в файл)");
-
-            System.out.println("0 - закрыть программу");
+            System.out.println("0 - вернуться в главное меню");
             command = readCommand();
 
             switch (command) {
                 case 1:
                     try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(armory))) {
-
-                        weaponAmount = dataInputStream.readInt();
+                        weaponAmount = Integer.parseInt(dataInputStream.readUTF());
                         for (int i = 0; i < weaponAmount; i++) {
                             weaponType = dataInputStream.readUTF();
                             if (weaponType.equals("MeleeWeapon"))
                             {
-                                MeleeWeapon meleeWeapon = new MeleeWeapon(dataInputStream.readUTF(), diceList[dataInputStream.readInt()-1], dataInputStream.readInt(), dataInputStream.readInt(), dataInputStream.readInt());
+                                MeleeWeapon meleeWeapon = new MeleeWeapon(dataInputStream.readUTF(), diceList[Integer.parseInt(dataInputStream.readUTF())], Integer.parseInt(dataInputStream.readUTF()), Integer.parseInt(dataInputStream.readUTF()), Integer.parseInt(dataInputStream.readUTF()));
                                 weaponList.addWeapon(meleeWeapon);
                             }
                             if (weaponType.equals("RangeWeapon"))
                             {
-                                RangeWeapon rangeWeapon = new RangeWeapon(dataInputStream.readUTF(), diceList[dataInputStream.readInt()-1], dataInputStream.readInt(), dataInputStream.readInt(), dataInputStream.readInt(), dataInputStream.readInt());
+                                RangeWeapon rangeWeapon = new RangeWeapon(dataInputStream.readUTF(), diceList[Integer.parseInt(dataInputStream.readUTF())], Integer.parseInt(dataInputStream.readUTF()), Integer.parseInt(dataInputStream.readUTF()), Integer.parseInt(dataInputStream.readUTF()), Integer.parseInt(dataInputStream.readUTF()));
                                 weaponList.addWeapon(rangeWeapon);
                             }
                         }
-                        
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
+                    }
+                    catch (NumberFormatException exception)
+                    {
+                        System.out.println("Неверный формат данных в файле или внезапный конец файла, возвращение в меню \n");
+                    }
+                    catch (FileNotFoundException e) {
+                        System.out.println("Доступ к арсеналу отсутствует(не найден файл с данными)");;
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    System.out.println("Арсенал успешно проверен");
+                    weaponList.writeWeaponList();
                     break;
                 case 2:
                     String name;
@@ -105,7 +109,8 @@ public class Menu {
                         if (weaponType.equals("1")) {
                             System.out.println("Введите название оружие");
                             name = scanner.nextLine();
-                            System.out.println("Введите кость урона");
+                            System.out.println("Введите номер кости урона");
+                            System.out.println("1 - d2\n2 - d4\n3 - d6\n4 - d8\n5 - d10\n6 - d12");
                             dice = readCommand();
                             System.out.println("Введите количество костей урона");
                             diceAmount = readCommand();
@@ -115,12 +120,14 @@ public class Menu {
                             range = readCommand();
                             MeleeWeapon meleeWeapon = new MeleeWeapon(name, diceList[dice - 1], diceAmount, sharp, range);
                             weaponList.addWeapon(meleeWeapon);
+                            System.out.println("Оружие добавлено в арсенал");
                             break;
                         }
                         if (weaponType.equals("2")) {
                             System.out.println("Введите название оружие");
                             name = scanner.nextLine();
-                            System.out.println("Введите кость урона");
+                            System.out.println("Введите номер кости урона");
+                            System.out.println("1 - d2\n2 - d4\n3 - d6\n4 - d8\n5 - d10\n6 - d12");
                             dice = readCommand();
                             System.out.println("Введите количество костей урона");
                             diceAmount = readCommand();
@@ -132,10 +139,11 @@ public class Menu {
                             ammunition = readCommand();
                             RangeWeapon rangeWeapon = new RangeWeapon(name, diceList[dice - 1], diceAmount, sharp, range, ammunition);
                             weaponList.addWeapon(rangeWeapon);
+                            System.out.println("Оружие добавлено в арсенал");
                             break;
                         }
                         else {
-                            System.out.println("Неверная команда");
+                            System.out.println("Неверный класс оружия, повторите ввод");
                         }
                     }
                     break;
@@ -150,6 +158,37 @@ public class Menu {
                     weaponList.writeWeapon(ID - 1);
                     break;
                 case 5:
+                    try(DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(armory)))
+                    {
+                        BaseWeapon weaponOutput;
+                        dataOutputStream.writeUTF(Integer.toString(weaponList.weaponAmount()));
+                        for (int i = 0; i < weaponList.weaponAmount(); i++) {
+                            weaponOutput = weaponList.getWeapon(i);
+                            if(weaponOutput.getClass() == MeleeWeapon.class)
+                            {
+                                dataOutputStream.writeUTF("MeleeWeapon");
+                                dataOutputStream.writeUTF(weaponOutput.getWeaponName());
+                                dataOutputStream.writeUTF(Integer.toString(weaponOutput.getDamageDice().ordinal()));
+                                dataOutputStream.writeUTF(Integer.toString(weaponOutput.getDamageDiceAmount()));
+                                dataOutputStream.writeUTF(Integer.toString(weaponOutput.getWeaponSharpening()));
+                                dataOutputStream.writeUTF(Integer.toString(weaponOutput.getAttackRange()));
+                            }
+                            if(weaponOutput.getClass() == RangeWeapon.class)
+                            {
+                                dataOutputStream.writeUTF("RangeWeapon");
+                                dataOutputStream.writeUTF(weaponOutput.getWeaponName());
+                                dataOutputStream.writeUTF(Integer.toString(weaponOutput.getDamageDice().ordinal()));
+                                dataOutputStream.writeUTF(Integer.toString(weaponOutput.getDamageDiceAmount()));
+                                dataOutputStream.writeUTF(Integer.toString(weaponOutput.getWeaponSharpening()));
+                                dataOutputStream.writeUTF(Integer.toString(weaponOutput.getAttackRange()));
+                                dataOutputStream.writeUTF(Integer.toString(((RangeWeapon) weaponOutput).getAmmunition()));
+                            }
+                        }
+                    } catch (FileNotFoundException e) {
+                        System.out.println("Доступ к арсеналу отсутствует(не найден файл с данными)");;
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     break;
                 case 0:
                     break;
@@ -160,23 +199,40 @@ public class Menu {
         } while (command != 0);
     }
 
-    public static void WeaponMenu()
+    private static void WeaponMenu()
     {
+        int ID = 0;
         int command = -1;
         do {
             System.out.println("_______________________________________________________________");
             System.out.println("Главное меню");
-            System.out.println("1 - работа с арсеналом");
-            System.out.println("2 - работа с оружием");
+            System.out.println("1 - взять по номеру оружие на проверку");
+            System.out.println("2 - оценить характеристики оружия");
+            System.out.println("3 - проверить оружие на манекене");
             System.out.println("0 - закрыть программу");
             command = readCommand();
 
             switch (command) {
                 case 1:
-
+                    System.out.println("Введите номер оружия");
+                    ID = readCommand() - 1;
+                    weapon = weaponList.getWeapon(ID);
+                    weaponList.writeWeapon(ID);
                     break;
                 case 2:
-
+                    weaponList.writeWeapon(ID);
+                    break;
+                case 3:
+                    try {
+                        System.out.println("Введите уровень защиты на манекене и дистанцию до него");
+                        System.out.println("Уровень защиты = "); int armoryLevel = readCommand();
+                        System.out.println("Дистанция в футах = "); int distance = readCommand();
+                        weapon.Attack(armoryLevel, distance);
+                    }
+                    catch (NullPointerException nullPointerException)
+                    {
+                        System.out.println("Оружие ещё не взято");
+                    }
                     break;
                 case 0:
                     break;
