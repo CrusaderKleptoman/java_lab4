@@ -68,6 +68,7 @@ public class Menu {
 
             switch (command) {
                 case 1:
+                    weaponList.clearWeaponList();
                     try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(armory))) {
                         weaponAmount = Integer.parseInt(dataInputStream.readUTF());
                         for (int i = 0; i < weaponAmount; i++) {
@@ -195,6 +196,7 @@ public class Menu {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    System.out.println("Оружие успешно сохранено в арсенале");
                     break;
                 case 0:
                     break;

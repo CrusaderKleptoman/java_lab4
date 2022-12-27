@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class WeaponList {
     private ArrayList<BaseWeapon> weaponList = new ArrayList<>();
 
+    public WeaponList()
+    { this.weaponList = new ArrayList<>();}
     public void addWeapon(BaseWeapon weapon) {
         if(weapon.getClass() == MeleeWeapon.class)
         {
@@ -85,5 +87,9 @@ public class WeaponList {
                 System.out.printf("%d) Оружие дальнего боя, название оружия %s, урон оружия %d%s, модификатор попадания и урона %d, дистанция выстрела %d, запас аммуниции %d \n", count, weapon.getWeaponName(), weapon.getDamageDiceAmount(), weapon.getDamageDice().toString(), weapon.getWeaponSharpening(), weapon.getAttackRange(), ((RangeWeapon) weapon).getAmmunition());
             }
         }
+    }
+    public void clearWeaponList()
+    {
+        this.weaponList.clear();
     }
 }
